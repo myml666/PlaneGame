@@ -28,6 +28,7 @@ class BulletImg:GameImg {
         mX = minePlane.getX() + minePlane.getWidth() / 2 -mBulletRes.width/2
         mY = minePlane.getY() - 10
     }
+
     override fun getImg(): Bitmap {
         mY -= 10
         if(mY+mBulletRes.height<0){

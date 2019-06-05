@@ -31,6 +31,7 @@ class EnemyImg:GameImg {
     private var mDisplayWidth:Int = 0
     private var mDisplayHeight:Int = 0
     private var mRandom:Random
+    private var mIsDown:Boolean = false //是否被击落
     constructor(ctx:Context,displayWidth:Int,displayHeight:Int){
         mCtx = ctx
         mEnemyRes = BitmapFactory.decodeResource(ctx.resources, R.drawable.diren)
@@ -40,6 +41,21 @@ class EnemyImg:GameImg {
         mRandom = Random()
         mX = mRandom.nextInt(mDisplayWidth - mEnemyRes.width/4)
         mY = -mEnemyImg.height
+    }
+    /**
+     * 是否被击落
+     */
+    fun isDown():Boolean{
+        if(mIsDown){
+            return true
+        }
+        for(bullet in GameView.mBullets.clone() as ArrayList<BulletImg>){
+            if(bullet.getX()>mX && bullet.getX()<mX+mEnemyImg.width && bullet.getY()>mY && bullet.getY()<mY+mEnemyImg.height){
+                GameView.mBullets.remove(bullet)
+                return true
+            }
+        }
+        return false
     }
     override fun getImg(): Bitmap {
         if(mTimeDelay == 10){
@@ -55,6 +71,7 @@ class EnemyImg:GameImg {
         if(mY > mDisplayHeight){
             GameView.mGameImgs.remove(this)
         }
+        mIsDown = isDown()
         return mEnemyImg
     }
     override fun getX(): Int {
