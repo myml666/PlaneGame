@@ -24,11 +24,23 @@ class BulletImg:GameImg {
     private var mX:Int = 0
     private var mY:Int = 0
     constructor(ctx:Context,minePlane:MineImg){
-        mBulletRes = BitmapFactory.decodeResource(ctx.resources, R.drawable.zidan)
+        mBulletRes = BitmapFactory.decodeResource(ctx.resources, R.drawable.yaling)
         mX = minePlane.getX() + minePlane.getWidth() / 2 -mBulletRes.width/2
         mY = minePlane.getY() - 10
     }
 
+    /**
+     * 获取子弹的宽度
+     */
+    fun getWidth():Int{
+        return mBulletRes.width
+    }
+    /**
+     * 获取子弹的高度
+     */
+    fun getHeight():Int{
+        return mBulletRes.height
+    }
     override fun getImg(): Bitmap {
         mY -= 10
         if(mY+mBulletRes.height<0){
