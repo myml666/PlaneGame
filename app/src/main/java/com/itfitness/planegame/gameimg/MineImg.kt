@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.util.Log
 import android.widget.Toast
 import com.itfitness.planegame.R
+import com.itfitness.planegame.utils.SoundPlayUtil
 import com.itfitness.planegame.widget.GameView
 import java.util.ArrayList
 
@@ -89,6 +90,7 @@ class MineImg:GameImg {
             if(gameimg is Enemy){
                 if (!gameimg.isExplode()){
                     if(gameimg.getX() - mX < getWidth() && mX - gameimg.getX() < gameimg.getWidth()  && mY < gameimg.getY()+gameimg.getHeight() && mY >gameimg.getY()){
+                        SoundPlayUtil.play(SoundPlayUtil.VOICE_GAMEOVER)
                         changeImg()
                         return true
                     }

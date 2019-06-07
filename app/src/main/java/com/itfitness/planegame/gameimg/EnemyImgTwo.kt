@@ -68,6 +68,7 @@ class EnemyImgTwo:GameImg,Enemy {
                 mLife --
                 if(mLife == 0){
                     SoundPlayUtil.play(SoundPlayUtil.VOICE_BOOM)
+                    GameView.score += 1
                     changeImg()
                     return true
                 }

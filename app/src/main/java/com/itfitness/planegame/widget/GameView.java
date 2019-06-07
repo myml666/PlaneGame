@@ -8,7 +8,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -56,6 +58,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,Runn
     private Context mContext;
     private MineImg mMineImg;
     private Random mRandom;
+    public static int score = 0;//分数
+    private Paint mPaint;//文字画笔
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -63,7 +67,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,Runn
             super.handleMessage(msg);
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setTitle("提示");
-            builder.setMessage("游戏结束");
+            builder.setMessage("游戏结束，总分数为："+score);
             builder.setNegativeButton("退出游戏", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -85,13 +89,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,Runn
                             mHandler.sendEmptyMessage(0);
                         }
                     }));
+                    score = 0;
                     new Thread(GameView.this).start();
                 }
             });
             builder.create().show();
         }
     };
+    private int mTextHeight;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public GameView(Context context) {
         super(context);
         mContext = context;
@@ -110,6 +117,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,Runn
             mExplodeImgs = new ArrayList<>();
         }
         SoundPlayUtil.INSTANCE.init(mContext);
+        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaint.setColor(Color.YELLOW);
+        mPaint.setTextAlign(Paint.Align.LEFT);
+        mPaint.setStrokeWidth(3);
         mRandom = new Random();
         Bitmap explodeRes = BitmapFactory.decodeResource(getResources(), R.drawable.baozha);
         mExplodeImgs.add(Bitmap.createBitmap(explodeRes,0,0,explodeRes.getWidth()/4,explodeRes.getHeight()/2));
@@ -134,6 +145,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,Runn
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         mWidth = width;
         mHeight = height;
+        mPaint.setTextSize(mWidth/14);//设置字体大小
+        Rect rect = new Rect();
+        mPaint.getTextBounds("分数", 0, 1, rect);
+        mTextHeight = rect.height();
         mGameImgs.clear();
         mGameImgs.add(new BgImg(mContext,mWidth,mHeight));
         mGameImgs.add(new MineImg(mContext, mWidth, mHeight, mExplodeImgs, new GameOver() {
@@ -182,6 +197,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback,Runn
             for(BulletImg bulletImg:(ArrayList<BulletImg>) mBullets.clone()){
                 canvas.drawBitmap(bulletImg.getImg(),bulletImg.getX(),bulletImg.getY(),null);
             }
+            canvas.drawText("分数："+score,20,mTextHeight+20,mPaint);
             getHolder().unlockCanvasAndPost(canvas);
             try {
                 Thread.sleep(10);
