@@ -23,7 +23,7 @@ import com.itfitness.planegame.R
  * @Version:        1.0
  */
 object SoundPlayUtil{
-    private lateinit var mSoundPool:SoundPool
+    private var mSoundPool:SoundPool? = null
     private var mIsLoadSuccess:Boolean = false
     var VOICE_SHOOT:Int = 0//子弹声音
     var VOICE_BOOM:Int = 0//爆炸声音
@@ -33,6 +33,9 @@ object SoundPlayUtil{
              * 初始化声音
              */
     fun init(ctx:Context){
+        if(mSoundPool!=null){
+            return
+        }
         if (Build.VERSION.SDK_INT >= 21) {
             val builder = SoundPool.Builder()
             //传入最多播放音频数量,
@@ -52,10 +55,10 @@ object SoundPlayUtil{
              */
             mSoundPool = SoundPool(10, AudioManager.STREAM_MUSIC, 0)
         }
-        VOICE_SHOOT = mSoundPool.load(ctx, R.raw.shot, 1)
-        VOICE_BOOM = mSoundPool.load(ctx, R.raw.bomb, 1)
-        VOICE_GAMEOVER = mSoundPool.load(ctx, R.raw.gameover, 1)
-        mSoundPool.setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
+        VOICE_SHOOT = mSoundPool!!.load(ctx, R.raw.shot, 1)
+        VOICE_BOOM = mSoundPool!!.load(ctx, R.raw.bomb, 1)
+        VOICE_GAMEOVER = mSoundPool!!.load(ctx, R.raw.gameover, 1)
+        mSoundPool!!.setOnLoadCompleteListener(SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
             if (status == 0) {
                 //第一个参数soundID
                 //第二个参数leftVolume为左侧音量值（范围= 0.0到1.0）
@@ -69,7 +72,7 @@ object SoundPlayUtil{
         })
     }
     fun getSoundPool():SoundPool{
-        return mSoundPool
+        return mSoundPool!!
     }
     /**
      * 播放声音

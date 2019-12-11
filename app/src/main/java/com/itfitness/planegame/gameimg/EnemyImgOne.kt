@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.itfitness.planegame.R
+import com.itfitness.planegame.common.Common
+import com.itfitness.planegame.utils.NumberUtil
 import com.itfitness.planegame.utils.SoundPlayUtil
 import com.itfitness.planegame.widget.GameView
 import java.util.*
@@ -106,7 +108,7 @@ class EnemyImgOne:GameImg,Enemy {
             }
         }
         mTimeDelay ++
-        mY += 8
+        mY += NumberUtil.getIntNum(Common.BOSS_SPEED)
         if(mY > mDisplayHeight){
             GameView.mGameImgs.remove(this)
         }

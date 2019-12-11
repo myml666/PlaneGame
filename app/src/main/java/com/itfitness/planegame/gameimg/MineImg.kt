@@ -83,6 +83,7 @@ class MineImg:GameImg {
      * 是否被坠毁
      */
     fun isDown():Boolean{
+        Log.e("结束","第一次")
         if(mIsDown){
             return true
         }
@@ -92,6 +93,7 @@ class MineImg:GameImg {
                     if(gameimg.getX() - mX < getWidth() && mX - gameimg.getX() < gameimg.getWidth()  && mY < gameimg.getY()+gameimg.getHeight() && mY >gameimg.getY()){
                         SoundPlayUtil.play(SoundPlayUtil.VOICE_GAMEOVER)
                         changeImg()
+                        mIsDown = true
                         return true
                     }
                 }
